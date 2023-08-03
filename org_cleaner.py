@@ -21,19 +21,14 @@ logging.root.setLevel(logging.INFO)
     "--only-fwpolicies", is_flag=True, help="Only delete firewall policies")
 def main(organization_id, dry_run, only_orgpolicies, only_fwpolicies):
   logging.info("Starting")
-  delete_all = True
+  delete_all = not any(only_orgpolicies, only_fwpolicies)
   cai_client = asset.AssetServiceClient()
-
-  if any([only_orgpolicies, only_fwpolicies]):
-    delete_all = False
 
   if delete_all or only_orgpolicies:
     org_policies.delete(cai_client, organization_id, dry_run)
 
   if delete_all or only_fwpolicies:
     firewall_policies.delete(cai_client, organization_id, dry_run)
-
-  return
 
 
 if __name__ == "__main__":
