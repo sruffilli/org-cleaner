@@ -2,3 +2,4 @@ click
 google-cloud-asset
 google-cloud-org-policy
 google-cloud-compute
+google-cloud-logging
