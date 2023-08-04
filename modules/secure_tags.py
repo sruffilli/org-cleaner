@@ -83,13 +83,6 @@ def _list_securetagvalues(cai_client, organization_id):
   return results_iterator
 
 
-def _delete_tag_key(tag_key, dry_run=False):
-  logger.info("Deleting tag key %s.", tag_key)
-  tagkey_client = resourcemanager_v3.TagKeysClient()
-  if not dry_run:
-    tagkey_client.delete_tag_key(name=tag_key)
-
-
 def _delete_tag_value(cai_client, organization_id, tag_value, dry_run=False):
   """
     Delete a specific secure tag value and its associated tag bindings.
@@ -140,6 +133,18 @@ def _delete_tag_value(cai_client, organization_id, tag_value, dry_run=False):
       logger.warning(
           "Deleting %s failed. Either you lack permission or the resource has been recently deleted.",
           tag_value)
+
+
+def _delete_tag_key(tag_key, dry_run=False):
+  """
+    Delete a specific secure tag key
+    :param tag_key: The name of the secure tag key.
+    :param dry_run: If True, performs a dry run without actually deleting anything.
+    """
+  logger.info("Deleting tag key %s.", tag_key)
+  tagkey_client = resourcemanager_v3.TagKeysClient()
+  if not dry_run:
+    tagkey_client.delete_tag_key(name=tag_key)
 
 
 def _delete_bindings_for_value(cai_client, resource_name, dry_run=False):
