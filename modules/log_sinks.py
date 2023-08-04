@@ -11,6 +11,7 @@ def delete(cai_client, organization_id, exclude_log_sinks, dry_run=False):
     Parameters:
         cai_client (google.cloud.asset_v1.AssetServiceClient): The Cloud Asset Inventory client.
         organization_id (str): The ID of the organization.
+        exclude_log_sinks (str): Comma-separated list of log sink names to exclude from deletion.
         dry_run (bool, optional): If True, only simulate the deletions without actually performing them. Default is False.
     """
   exclude_log_sinks = exclude_log_sinks.split(",")
