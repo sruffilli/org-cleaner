@@ -4,7 +4,7 @@ from google.cloud import logging_v2
 logger = logging.getLogger("default")
 
 
-def delete(cai_client, organization_id, exclude_log_sinks, dry_run=False):
+def delete(cai_client, organization_id, exclude_log_sinks, dry_run):
   """
     Delete log sinks created at folder and organization level
 
@@ -14,7 +14,7 @@ def delete(cai_client, organization_id, exclude_log_sinks, dry_run=False):
         exclude_log_sinks (str): Comma-separated list of log sink names to exclude from deletion.
         dry_run (bool, optional): If True, only simulate the deletions without actually performing them. Default is False.
     """
-  exclude_log_sinks = exclude_log_sinks.split(",")
+  exclude_log_sinks = exclude_log_sinks.split(",") if exclude_log_sinks else []
   log_sinks_list = [
       x.replace("//logging.googleapis.com/", "")
       for x in _list_log_sinks(cai_client, organization_id)

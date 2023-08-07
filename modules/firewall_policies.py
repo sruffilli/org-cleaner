@@ -4,7 +4,7 @@ from google.cloud import compute_v1
 logger = logging.getLogger("default")
 
 
-def delete(cai_client, organization_id, dry_run=False):
+def delete(cai_client, organization_id, dry_run):
   """
     Delete firewall policies and their associations.
 
@@ -73,10 +73,8 @@ def _list_fw_policies(cai_client, organization_id):
   return ret
 
 
-def _delete_policy_association(fw_policy_client,
-                               policy_id,
-                               association,
-                               dry_run=False):
+def _delete_policy_association(fw_policy_client, policy_id, association,
+                               dry_run):
   """
     Delete the association of a firewall policy.
 

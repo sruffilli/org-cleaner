@@ -4,7 +4,7 @@ from google.cloud import orgpolicy_v2
 logger = logging.getLogger("default")
 
 
-def delete(cai_client, organization_id, dry_run=False):
+def delete(cai_client, organization_id, dry_run):
   """
     Delete organization policies.
 

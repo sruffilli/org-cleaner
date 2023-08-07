@@ -4,7 +4,7 @@ from google.cloud import resourcemanager_v3
 logger = logging.getLogger("default")
 
 
-def delete(cai_client, organization_id, dry_run=False):
+def delete(cai_client, organization_id, dry_run):
   """
     Delete secure tag values and their associated tag bindings.
 
@@ -34,7 +34,7 @@ def delete(cai_client, organization_id, dry_run=False):
   logger.info("Retrieved %s secure tag keys.", len(tag_keys))
 
   for tag_key in tag_keys:
-    _delete_tag_key(tag_key)
+    _delete_tag_key(tag_key, dry_run)
 
 
 def _list_securetagkeys(cai_client, organization_id):
@@ -83,7 +83,7 @@ def _list_securetagvalues(cai_client, organization_id):
   return results_iterator
 
 
-def _delete_tag_value(cai_client, organization_id, tag_value, dry_run=False):
+def _delete_tag_value(cai_client, organization_id, tag_value, dry_run):
   """
     Delete a specific secure tag value and its associated tag bindings.
 
@@ -135,7 +135,7 @@ def _delete_tag_value(cai_client, organization_id, tag_value, dry_run=False):
           tag_value)
 
 
-def _delete_tag_key(tag_key, dry_run=False):
+def _delete_tag_key(tag_key, dry_run):
   """
     Delete a specific secure tag key
     :param tag_key: The name of the secure tag key.
@@ -147,7 +147,7 @@ def _delete_tag_key(tag_key, dry_run=False):
     tagkey_client.delete_tag_key(name=tag_key)
 
 
-def _delete_bindings_for_value(cai_client, resource_name, dry_run=False):
+def _delete_bindings_for_value(cai_client, resource_name, dry_run):
   """
     Delete tag bindings associated with a specific resource.
 
