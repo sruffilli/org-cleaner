@@ -5,8 +5,7 @@ from modules import firewall_policies, log_sinks, org_policies, secure_tags
 
 # Set up logging configuration
 logger = logging.getLogger("default")
-logging.basicConfig(
-    format='[%(levelname)s] - %(asctime)s - Org Cleaner - %(message)s')
+logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s')
 logging.root.setLevel(logging.INFO)
 
 

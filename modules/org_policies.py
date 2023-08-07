@@ -13,6 +13,9 @@ def delete(cai_client, organization_id, dry_run):
         organization_id (str): The ID of the organization.
         dry_run (bool, optional): If True, only simulate the deletions without actually performing them. Default is False.
     """
+
+  logger.info(f"Starting processing org policies")
+
   org_policy_list = _list_org_policies(cai_client, organization_id)
 
   org_policy_client = orgpolicy_v2.OrgPolicyClient()
@@ -22,15 +25,16 @@ def delete(cai_client, organization_id, dry_run):
   for policy in org_policy_list:
     policy = policy.replace("//orgpolicy.googleapis.com/", "")
 
-    logger.debug(f"Deleting organization {policy}")
+    log_message = "%sDeleting organization policy %s." % (
+        "(Simulated) " if dry_run else "", policy)
+    logger.info(log_message)
 
     request = orgpolicy_v2.DeletePolicyRequest(name=policy,)
 
     if not dry_run:
       org_policy_client.delete_policy(request=request)
 
-  if not dry_run:
-    logger.info(f"{len(org_policy_list)} policies deleted.")
+  logger.info(f"Done processing org policies")
 
 
 def _list_org_policies(cai_client, organization_id):

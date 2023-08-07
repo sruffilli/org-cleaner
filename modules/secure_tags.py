@@ -14,6 +14,8 @@ def delete(cai_client, organization_id, dry_run):
     :param dry_run: If True, performs a dry run without actually deleting anything.
     """
 
+  logger.info(f"Starting processing secure tags")
+
   # Retrieve the secure tag values for the organization
   tag_values = [
       x.name.replace("//cloudresourcemanager.googleapis.com/", "")
@@ -35,6 +37,8 @@ def delete(cai_client, organization_id, dry_run):
 
   for tag_key in tag_keys:
     _delete_tag_key(tag_key, dry_run)
+
+  logger.info(f"Done processing secure tags")
 
 
 def _list_securetagkeys(cai_client, organization_id):
@@ -125,7 +129,9 @@ def _delete_tag_value(cai_client, organization_id, tag_value, dry_run):
   for binding in cai_bindings_response:
     _delete_bindings_for_value(cai_client, binding.name, dry_run)
 
-  logger.info("Deleting secure tag value %s.", tag_value)
+  log_message = "%sDeleting secure tag value %s." % ("(Simulated) " if dry_run
+                                                     else "", tag_value)
+  logger.info(log_message)
   if not dry_run:
     try:
       tagvalue_client.delete_tag_value(name=tag_value)
@@ -141,7 +147,9 @@ def _delete_tag_key(tag_key, dry_run):
     :param tag_key: The name of the secure tag key.
     :param dry_run: If True, performs a dry run without actually deleting anything.
     """
-  logger.info("Deleting tag key %s.", tag_key)
+  log_message = "%sDeleting tag key %s." % ("(Simulated) " if dry_run else "",
+                                            tag_key)
+  logger.info(log_message)
   tagkey_client = resourcemanager_v3.TagKeysClient()
   if not dry_run:
     tagkey_client.delete_tag_key(name=tag_key)
@@ -164,7 +172,9 @@ def _delete_bindings_for_value(cai_client, resource_name, dry_run):
   list(bindings_response)
 
   for binding in bindings_response:
-    logger.info("Deleting binding for %s.", binding.name)
+    log_message = "%sDeleting binding %s." % ("(Simulated) " if dry_run else "",
+                                              binding.name)
+    logger.info(log_message)
     if not dry_run:
       # Perform the actual deletion of the tag binding
       tagbinding_client.delete_tag_binding(name=binding.name)

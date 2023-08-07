@@ -14,6 +14,9 @@ def delete(cai_client, organization_id, exclude_log_sinks, dry_run):
         exclude_log_sinks (str): Comma-separated list of log sink names to exclude from deletion.
         dry_run (bool, optional): If True, only simulate the deletions without actually performing them. Default is False.
     """
+
+  logger.info(f"Starting processing log sinks")
+
   exclude_log_sinks = exclude_log_sinks.split(",") if exclude_log_sinks else []
   log_sinks_list = [
       x.replace("//logging.googleapis.com/", "")
@@ -26,18 +29,22 @@ def delete(cai_client, organization_id, exclude_log_sinks, dry_run):
 
   for sink in log_sinks_list:
     if not sink in exclude_log_sinks:
-      logger.info(f"Deleting sink '{sink}'")
+      log_message = "%sDeleting sink %s." % ("(Simulated) " if dry_run else "",
+                                             sink)
+      logger.info(log_message)
       if not dry_run:
         log_sinks_client.sinks_api.sink_delete(sink)
     else:
       logger.info(f"Skipping sink '{sink}'")
+
+  logger.info(f"Done processing log sinks")
 
 
 def _list_log_sinks(cai_client, organization_id):
   """
     List log sinks created at Folder or Organization level for the specified organization.
     Filters _Default and _Required out.
-    
+
     Parameters:
         cai_client (google.cloud.asset_v1.AssetServiceClient): The Cloud Asset Inventory client.
         organization_id (str): The ID of the organization.
